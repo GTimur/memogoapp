@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"memogo"
 	"time"
 )
 
@@ -27,9 +29,34 @@ type Memo struct {
 	Mails    []string  //emails list
 }
 
+var globalconfig memogo.Config
+
 func main() {
 	memo := Memo{}
 	rem := Remind{}
+	//smtp :=
+	globalconfig = memogo.Config{
+		Root: "./root/",
+		SMTPSrv: memogo.SrvSMTP{
+			Addr:     "10.20.20.6",
+			Port:     25,
+			Account:  "noti",
+			Password: "Bank999",
+			From:     "noti@ymkbank.ru",
+			FromName: "Memo GO",
+			UseTLS:   false,
+		},
+		MgrSrv: memogo.ManagerSrv{
+			Addr: "127.0.0.1",
+			Port: 8000,
+		},
+	}
+
+	var files map[string]string
+	var dirs map[string]string
+
+	files = make(map[string]string)
+	dirs = make(map[string]string)
 
 	loc, err := time.LoadLocation("Europe/Moscow")
 	if err != nil {
@@ -49,4 +76,32 @@ func main() {
 	memo.Reminder = rem
 
 	fmt.Println(memo)
+	dirs, err = memogo.FindFiles(globalconfig.Root, []string{"*"})
+	if err != nil {
+		log.Fatalf("Main(): FindFiles error: %v", err)
+	}
+	fmt.Println("FILES FOUND:", dirs)
+
+	for k, _ := range dirs {
+		f, err := memogo.FindFiles(k, []string{"*.*"})
+		if err != nil {
+			log.Fatalf("Main(): FindFiles error: %v", err)
+		}
+		fmt.Println("FILES FOUND:", f)
+
+		for kk, vv := range f {
+			files[kk] = vv
+		}
+	}
+
+	fmt.Println("FILES FOUND:", files)
+
+	err = globalconfig.MakeConfig()
+	if err != nil {
+		panic(err)
+	}
+	err = globalconfig.WriteJSON()
+	if err != nil {
+		panic(err)
+	}
 }
