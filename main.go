@@ -1,8 +1,12 @@
 package main
 
+import (
+	"memogo"
+)
+
 func main() {
 	memogo.GlobalConfig = memogo.Config{
-		Root: "./root/",
+		Root: "root\\",
 		SMTPSrv: memogo.SrvSMTP{
 			Addr:     "10.20.20.6",
 			Port:     25,
@@ -17,7 +21,11 @@ func main() {
 			Port: 8000,
 		},
 	}
-	
+
+	err := memogo.Rebuild()
+	if err != nil {
+		panic(err)
+	}
 
 	//var files map[string]string
 
