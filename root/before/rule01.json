@@ -1,23 +1,23 @@
 {
-	"ID": 102,
+	"ID": 100,
 	"Date": "2018-05-17T14:20:11.2212354+03:00",
 	"Scenario": {
-		"DateStart": "2018-05-17T10:00:00+03:00",
-		"DateEnd": "2018-05-18T23:59:59+03:00",
+		"DateStart": "2018-05-25T10:00:00+03:00",
+		"DateEnd": "2018-05-25T23:59:59+03:00",
 		"FreqBefore": {
-			"Granula": "m",
-			"Value": -1,
+			"Granula": "d",
+			"Value": 10,
 			"Count": -1
 		},
 		"FreqTill": {
 			"Granula": "h",
-			"Value": 1,
+			"Value": -1,
 			"Count": -1
 		},
 		"FreqAfter": {
 			"Granula": "m",
-			"Value": 1,
-			"Count": 10
+			"Value": -1,
+			"Count": -1
 		}
 	},
 	"Subj": "Срок действия сертификата SSL",

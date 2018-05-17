@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"memogo"
 )
 
@@ -22,35 +24,30 @@ func main() {
 		},
 	}
 
-	err := memogo.Rebuild()
+	err := memogo.TasksRebuild()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	//var files map[string]string
-
-	//files, err := memogo.FindAllFiles(globalconfig.Root, []string{"*.*"})
-	//if err != nil {
-	//	log.Fatalf("Main(): FindFiles error: %v", err)
-	//}
-
-	//groupname := path.Dir(strings.Replace("./root/test2/rule01.json", globalconfig.Root, "", -1))
-	//fmt.Println("GROUPS FOUND:", groupname)
-	//fmt.Println("FILES FOUND:", files)
-
-	/*err = GlobalConfig.MakeConfig()
+	err = memogo.BuildTimeMap()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	err = GlobalConfig.WriteJSON()
-	if err != nil {
-		panic(err)
-	}
+	m := memogo.GlobalTimeMap[100]
 
-	err = memogo.TestJSON()
-	if err != nil {
-		log.Fatalf("TestJSON() error: %v", err)
+	/*for i := 0; i <= 40; i++ {
+		fmt.Println("TimeMap:\n", m[i], i)
 	}*/
+
+	for i := len(m) - 30; i <= len(m); i++ {
+		fmt.Println("TimeMap:\n", m[i], i)
+	}
+
+	//n := memogo.NextTime(memogo.TasksGlobal[0].Memo, 60*60)
+
+	//fmt.Println("NEXT:", n)
+
+	//fmt.Println("TimeMapCounter:\n", memogo.GlobalTimeCount[100])
 
 }
