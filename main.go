@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"memogo"
+	"time"
 )
 
 func main() {
@@ -24,7 +25,7 @@ func main() {
 		},
 	}
 
-	err := memogo.TasksRebuild()
+	err := memogo.TasksReload()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,13 +37,21 @@ func main() {
 
 	m := memogo.GlobalTimeMap[100]
 
-	/*for i := 0; i <= 40; i++ {
+	for i := 0; i <= 10; i++ {
+		fmt.Println("TimeMap:\n", m[int64(i)], i)
+	}
+
+	/*for i := len(m) - 30; i <= len(m); i++ {
 		fmt.Println("TimeMap:\n", m[i], i)
 	}*/
 
-	for i := len(m) - 30; i <= len(m); i++ {
-		fmt.Println("TimeMap:\n", m[i], i)
+	err = memogo.Reader()
+	if err != nil {
+		log.Fatal(err)
 	}
+
+	res := memogo.Row(time.Now(), 10)
+	fmt.Println(res)
 
 	//n := memogo.NextTime(memogo.TasksGlobal[0].Memo, 60*60)
 
