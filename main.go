@@ -4,6 +4,10 @@ import (
 	"fmt"
 	"log"
 	"memogo"
+	"net"
+	"os"
+	"os/signal"
+	"strconv"
 	"time"
 )
 
@@ -25,38 +29,44 @@ func main() {
 		},
 	}
 
-	err := memogo.TasksReload()
+	// Инициализация web-сервера
+	memogo.NeedExit = false // флаг для завершения работы
+	var web memogo.WebCtl
+	//memogo.GlobalConfig.SetManagerSrv("127.0.0.1", 4400)
+	web.SetHost(net.ParseIP(memogo.GlobalConfig.ManagerSrvAddr()))
+	web.SetPort(memogo.GlobalConfig.ManagerSrvPort())
+
+	fmt.Println("Web control configured: " + "http://" + memogo.GlobalConfig.ManagerSrvAddr() + ":" + strconv.Itoa(int(memogo.GlobalConfig.ManagerSrvPort())))
+
+	/* Запускаем сервер обслуживания WebCtl */
+	err := web.StartServe()
 	if err != nil {
-		log.Fatal(err)
+		log.Println("HTTP сервер: Ошибка. ", err)
+		os.Exit(1)
 	}
 
-	err = memogo.BuildTimeMap()
-	if err != nil {
-		log.Fatal(err)
+	/* Перехват CTRL+C для завершения приложения */
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		for sig := range c {
+			fmt.Printf("\nReceived %v, shutdown procedure initiated.\n\n", sig)
+			memogo.Quit <- 1
+			memogo.NeedExit = true
+		}
+	}()
+
+	// Цикл с таймером для ожидания команды завершения
+	ticker := time.NewTicker(time.Second * 1) // Запускаем обработчик каждую секунду
+
+	// Зациклимся с таймером посекундно пока не получим команду завершения работы.
+	for range ticker.C {
+		if !memogo.NeedExit {
+			continue
+		}
+		break
 	}
 
-	m := memogo.GlobalTimeMap[100]
-
-	for i := 0; i <= 10; i++ {
-		fmt.Println("TimeMap:\n", m[int64(i)], i)
-	}
-
-	/*for i := len(m) - 30; i <= len(m); i++ {
-		fmt.Println("TimeMap:\n", m[i], i)
-	}*/
-
-	err = memogo.Reader()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	res := memogo.Row(time.Now(), 10)
-	fmt.Println(res)
-
-	//n := memogo.NextTime(memogo.TasksGlobal[0].Memo, 60*60)
-
-	//fmt.Println("NEXT:", n)
-
-	//fmt.Println("TimeMapCounter:\n", memogo.GlobalTimeCount[100])
+	ticker.Stop()
 
 }
