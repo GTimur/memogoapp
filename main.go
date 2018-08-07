@@ -32,7 +32,6 @@ func main() {
 	// Инициализация web-сервера
 	memogo.NeedExit = false // флаг для завершения работы
 	var web memogo.WebCtl
-	//memogo.GlobalConfig.SetManagerSrv("127.0.0.1", 4400)
 	web.SetHost(net.ParseIP(memogo.GlobalConfig.ManagerSrvAddr()))
 	web.SetPort(memogo.GlobalConfig.ManagerSrvPort())
 
