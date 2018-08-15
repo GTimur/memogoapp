@@ -2,16 +2,16 @@
 	"ID": 1101,
 	"Date": "2018-08-01T15:45:11.2212354+03:00",
 	"Scenario": {
-		"DateStart": "2018-08-06T12:50:00+03:00",
-		"DateEnd": "2018-08-12T23:59:59+03:00",
+		"DateStart": "2018-08-15T17:20:00+03:00",
+		"DateEnd": "2018-08-16T23:59:59+03:00",
 		"FreqBefore": {
 			"Granula": "m",
 			"Value": -1,
 			"Count": -1
 		},
 		"FreqTill": {
-			"Granula": "m",
-			"Value": 2,
+			"Granula": "h",
+			"Value": 1,
 			"Count": -1
 		},
 		"FreqAfter": {
