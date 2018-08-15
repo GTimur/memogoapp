@@ -1,0 +1,18 @@
+2018-08-15 16:06:06	LogFile initialization completed.
+2018-08-15 16:06:24	LogFile initialization completed.
+2018-08-15 16:06:46	LogFile initialization completed.
+2018-08-15 16:10:36	LogFile initialization completed.
+2018-08-15 16:10:41	LogFile initialization completed.
+2018-08-15 16:13:56	LogFile initialization completed.
+2018-08-15 16:28:45	BuildTimeMap error: Event <Group:now,ID:0> outdated:2018-08-12 23:59:59 +0300 MSK
+2018-08-15 16:28:45	BuildTimeMap error: Event <Group:do,ID:2> outdated:2018-08-01 23:59:59 +0300 MSK
+2018-08-15 16:28:45	BuildTimeMap error: Event <Group:now,ID:3> outdated:2018-08-12 23:59:59 +0300 MSK
+2018-08-15 16:43:59	BuildTimeMap error: Event <Group:now,ID:0> outdated:2018-08-12 23:59:59 +0300 MSK
+2018-08-15 16:43:59	BuildTimeMap error: Event <Group:now,ID:1> outdated:2018-08-12 23:59:59 +0300 MSK
+2018-08-15 16:43:59	BuildTimeMap error: Event <Group:do,ID:3> outdated:2018-08-01 23:59:59 +0300 MSK
+2018-08-15 16:45:50	BuildTimeMap error: Event <Group:do,ID:0> outdated:2018-08-01 23:59:59 +0300 MSK
+2018-08-15 16:45:50	BuildTimeMap error: Event <Group:now,ID:1> outdated:2018-08-12 23:59:59 +0300 MSK
+2018-08-15 16:45:50	BuildTimeMap error: Event <Group:now,ID:2> outdated:2018-08-12 23:59:59 +0300 MSK
+2018-08-15 16:48:54	BuildTimeMap error: Event <Group:do,ID:1> outdated:2018-08-01 23:59:59 +0300 MSK
+2018-08-15 16:48:54	BuildTimeMap error: Event <Group:now,ID:2> outdated:2018-08-12 23:59:59 +0300 MSK
+2018-08-15 16:48:54	BuildTimeMap error: Event <Group:now,ID:3> outdated:2018-08-12 23:59:59 +0300 MSK

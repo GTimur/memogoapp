@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"memogo"
@@ -13,29 +14,47 @@ import (
 
 func main() {
 	var err error
-	err = memogo.GlobalConfig.ReadJSON()
-	if err != nil {
-		log.Fatalln("Error: Config file (", memogo.CONFIGFILE, ") not found.\n Program terminated.")
+
+	makeConfig := flag.Int("makeConfig", 0, "1 - config file template will be created")
+	flag.Parse()
+	if *makeConfig == 1 {
+		memogo.GlobalConfig = memogo.Config{
+			Root: "root\\",
+			SMTPSrv: memogo.SrvSMTP{
+				Addr:     "10.20.20.6",
+				Port:     25,
+				Account:  "noti",
+				Password: "Password111",
+				From:     "noti@ymkbank.ru",
+				FromName: "Memo GO",
+				UseTLS:   false,
+			},
+			MgrSrv: memogo.ManagerSrv{
+				Addr: "127.0.0.1",
+				Port: 8000,
+			},
+			LogFile: memogo.LogFile{
+				Filename:   memogo.LOGFILE, // path to file
+				CleanStale: false,          // if Stale flag is set - data will be rewrited after TTLDays
+				TTLDays:    180,            // TTL in days if Stale is set
+			},
+		}
+		err = memogo.GlobalConfig.MakeConfig()
+		if err != nil {
+			log.Fatalln("Creation error: ", memogo.CONFIGFILE, "\n Program terminated")
+		}
+		err = memogo.GlobalConfig.WriteJSON()
+		if err != nil {
+			log.Fatalln("Write error: ", memogo.CONFIGFILE, "\n Program terminated")
+		}
+		os.Exit(0)
 	}
 
-	/*memogo.GlobalConfig = memogo.Config{
-		Root: "root\\",
-		SMTPSrv: memogo.SrvSMTP{
-			Addr:     "10.20.20.6",
-			Port:     25,
-			Account:  "noti",
-			Password: "Password111",
-			From:     "noti@ymkbank.ru",
-			FromName: "Memo GO",
-			UseTLS:   false,
-		},
-		MgrSrv: memogo.ManagerSrv{
-			Addr: "127.0.0.1",
-			Port: 8000,
-		},
-	}
-	memogo.GlobalConfig.WriteJSON()
-	*/
+	memogo.Banner()
+
+	memogo.InitConfig()
+	memogo.InitLog()
+	memogo.InitEvents()
 
 	// Инициализация web-сервера
 	memogo.NeedExit = false // флаг для завершения работы
@@ -43,7 +62,7 @@ func main() {
 	web.SetHost(net.ParseIP(memogo.GlobalConfig.ManagerSrvAddr()))
 	web.SetPort(memogo.GlobalConfig.ManagerSrvPort())
 
-	fmt.Println("Web control configured: " + "http://" + memogo.GlobalConfig.ManagerSrvAddr() + ":" + strconv.Itoa(int(memogo.GlobalConfig.ManagerSrvPort())))
+	fmt.Println("\nWeb control configured: " + "http://" + memogo.GlobalConfig.ManagerSrvAddr() + ":" + strconv.Itoa(int(memogo.GlobalConfig.ManagerSrvPort())))
 
 	/* Запускаем сервер обслуживания WebCtl */
 	err = web.StartServe()
@@ -76,22 +95,11 @@ func main() {
 
 		// Опрос папки /root раз в час + переинициализация списков
 		if h == 60*60 {
-			err = memogo.TasksReload()
-			if err != nil {
-				log.Println("TasksReload error:", err)
-			}
-
+			// read tasks from disk and rebuild GlobalTask
 			// read GlobalTask array and rebuild GlobalTimeMap
-			err = memogo.BuildTimeMap()
-			if err != nil {
-				log.Fatal(err)
-			}
-
 			// read GlobalTimeMap and build GlobalQueue
-			err = memogo.GlobalQueue.MakeQueue()
-			if err != nil {
-				log.Fatal(err)
-			}
+			memogo.InitEvents()
+			h = 0
 		}
 		h++
 
@@ -102,5 +110,4 @@ func main() {
 	}
 
 	ticker.Stop()
-
 }
