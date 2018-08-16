@@ -4,7 +4,7 @@
 		"Addr": "10.20.20.6",
 		"Port": 25,
 		"Account": "noti@ymkbank.ru",
-		"Password": "244*233*4*54*156*204*110*71*",
+		"Password": "244*233*4*54*156*",
 		"From": "noti@ymkbank.ru",
 		"FromName": "Memo GO",
 		"UseTLS": false
@@ -15,7 +15,7 @@
 	},
 	"LogFile": {
 		"Filename": "logfile.log",
-		"CleanStale": true,
-		"TTLDays": 1
+		"CleanStale": false,
+		"TTLDays": 365
 	}
 }
