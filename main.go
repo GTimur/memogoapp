@@ -31,7 +31,7 @@ func main() {
 			},
 			MgrSrv: memogo.ManagerSrv{
 				Addr: "127.0.0.1",
-				Port: 8000,
+				Port: 8800,
 			},
 			LogFile: memogo.LogFile{
 				Filename:   memogo.LOGFILE, // path to file
