@@ -2,6 +2,10 @@
 
 CHANGELOG:
 
+VERSION 0.3.0
+    * InitTasks will not exit if memo-file has error, but alerts to log-file.
+    * InitTasks delay option in minutes.
+
 VERSION 0.2.9
     * Reading granula characters improvment (dhm,DHM)
     * Fixed "till" first time value

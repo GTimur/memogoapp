@@ -16,6 +16,7 @@ func main() {
 	var err error
 
 	makeConfig := flag.Int("makeConfig", 0, "1 - config file template will be created")
+	initDelay := flag.Int("initDelay", 0, "InitTasks loop delay in minutes, default=60")
 	flag.Parse()
 	if *makeConfig == 1 {
 		memogo.GlobalConfig = memogo.Config{
@@ -48,6 +49,12 @@ func main() {
 			log.Fatalln("Write error: ", memogo.CONFIGFILE, "\n Program terminated")
 		}
 		os.Exit(0)
+	}
+
+	if *initDelay <= 0 || *initDelay >= 168 {
+		memogo.GlobalInitDelay = 60 * 60 //1 hour
+	} else {
+		memogo.GlobalInitDelay = *initDelay * 60 //to minutes
 	}
 
 	memogo.Banner()
@@ -94,11 +101,12 @@ func main() {
 		}
 
 		// Опрос папки /root раз в час + переинициализация списков
-		if h == 60*60 {
+		if h == memogo.GlobalInitDelay {
 			// read tasks from disk and rebuild GlobalTask
 			// read GlobalTask array and rebuild GlobalTimeMap
 			// read GlobalTimeMap and build GlobalQueue
 			memogo.InitEvents()
+			memogo.GlobalConfig.LogFile.Add("Tasks reloaded. Time maps rebuilded. Delay=" + string(memogo.GlobalInitDelay/60) + "minutes.")
 			h = 0
 		}
 		h++
