@@ -18,6 +18,7 @@ func main() {
 	makeConfig := flag.Int("makeConfig", 0, "1 - config file template will be created")
 	initDelay := flag.Int("initDelay", 0, "InitTasks loop delay in minutes, default=60")
 	flag.Parse()
+
 	if *makeConfig == 1 {
 		memogo.GlobalConfig = memogo.Config{
 			Root: "root\\",
@@ -93,7 +94,7 @@ func main() {
 	ticker := time.NewTicker(time.Second * 1) // Запускаем обработчик каждую секунду
 
 	// Зациклимся с таймером посекундно пока не получим команду завершения работы.
-	h := 0
+	memogo.DelayCounter = 0
 	for range ticker.C {
 		err := memogo.MemoSvc(memogo.GlobalQueue)
 		if err != nil {
@@ -101,15 +102,15 @@ func main() {
 		}
 
 		// Опрос папки /root раз в час + переинициализация списков
-		if h == memogo.GlobalInitDelay {
+		if memogo.DelayCounter >= memogo.GlobalInitDelay {
 			// read tasks from disk and rebuild GlobalTask
 			// read GlobalTask array and rebuild GlobalTimeMap
 			// read GlobalTimeMap and build GlobalQueue
 			memogo.InitEvents()
-			memogo.GlobalConfig.LogFile.Add("Tasks reloaded. Time maps rebuilded. Delay=" + string(memogo.GlobalInitDelay/60) + "minutes.")
-			h = 0
+			memogo.GlobalConfig.LogFile.Add("Tasks reloaded. Time maps rebuilded. Delay=" + strconv.Itoa(memogo.GlobalInitDelay/60) + "minutes.")
+			memogo.DelayCounter = 0
 		}
-		h++
+		memogo.DelayCounter++
 
 		if !memogo.NeedExit {
 			continue
